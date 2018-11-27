@@ -7,7 +7,6 @@ export default class ChatBar extends Component {
   // and triggers the addMessage function inherited from  App component
   handleInputMessage = (e)  => {
     if(e.keyCode == 13){ 
-      console.log(e.target.value);
       this.props.addMessage(e.target.value);
       e.target.value = '';
     }

@@ -44,8 +44,9 @@ class App extends Component {
   
   addMessage = (content) => {
     const message = {username: this.state.currentUser.name, content: content};
-    const messages = this.state.messages.concat(message);
-    this.setState({messages: messages});
+    //const messages = this.state.messages.concat(message);
+    //this.setState({messages: messages});
+    this.socket.send({message});
   }
 
   render() {
