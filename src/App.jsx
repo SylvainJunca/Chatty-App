@@ -31,6 +31,8 @@ class App extends Component {
     };
     this.socket.onmessage = function (event) {
       console.log("Received from websocket :", event.data);
+      const mess = JSON.parse(event.data);
+      console.log(`${mess.username} says ${mess.content}`)
     }
     // setTimeout(() => {
     //   console.log("Simulating incoming message");
