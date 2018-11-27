@@ -29,8 +29,9 @@ class App extends Component {
     this.socket.onopen = function (e) {
       console.log("connected to " + e.currentTarget.url);
     };
-    
-    console.log("componentDidMount <App />");
+    this.socket.onmessage = function (event) {
+      console.log("Received from websocket :", event.data);
+    }
     // setTimeout(() => {
     //   console.log("Simulating incoming message");
     //   // Add a new message to the list of messages in the data store
@@ -43,10 +44,12 @@ class App extends Component {
   }
   
   addMessage = (content) => {
+   
     const message = {username: this.state.currentUser.name, content: content};
     //const messages = this.state.messages.concat(message);
-    //this.setState({messages: messages});
-    this.socket.send({message});
+    //this.setState({messages: messages}); 
+    console.log('adding message', message)
+    this.socket.send(JSON.stringify(message));
   }
 
   render() {
