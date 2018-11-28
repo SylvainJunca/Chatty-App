@@ -54,9 +54,7 @@ class App extends Component {
   render() {
     return (
       <div>
-        <nav className="navbar">
-          <a href="/" className="navbar-brand">Chatty</a>
-        </nav>
+        <NavBar users{this.state.users} />
         <MessageList messages = {this.state.messages}/>
         <ChatBar user = {this.state.currentUser} addMessage={this.addMessage} updateUsername={this.updateUsername}/>
       </div>
