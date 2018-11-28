@@ -9,5 +9,5 @@ export default class NavBar extends Component {
             <span className="users-connected">Users connected : {this.props.numberUsers}</span>
           </nav>
         );
-} 
+  } 
 }
