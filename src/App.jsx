@@ -32,18 +32,17 @@ class App extends Component {
       const messages = this.state.messages.concat(mess);
       this.setState({messages: messages}); 
       };
+
+      this.scrollToBottom();
       //console.log(`${mess.username} says ${mess.content}`);
     };
-    // setTimeout(() => {
-    //   console.log("Simulating incoming message");
-    //   // Add a new message to the list of messages in the data store
-    //   const newMessage = {id: 3, username: "Michelle", content: "Hello there!"};
-    //   const messages = this.state.messages.concat(newMessage)
-    //   // Update the state of the app component.
-    //   // Calling setState will trigger a call to render() in App and all child components.
-    //   this.setState({messages: messages})
-    // }, 3000);
+    
   }
+  
+  scrollToBottom = () => {
+    this.messagesEnd.scrollIntoView({ behavior: "smooth" });
+  }
+
   updateUsername = (username) => {
     const notification = {type: 'postNotification', content : `${this.state.currentUser.name} changed their name to ${username}`}
     this.socket.send(JSON.stringify(notification));
@@ -62,7 +61,12 @@ class App extends Component {
     return (
       <div>
         <NavBar numberUsers = {this.state.users} />
-        <MessageList messages = {this.state.messages}/>
+        <div>
+          <MessageList messages = {this.state.messages}/>
+          <div style={{ float: "left", clear: "both" }}
+              ref={(el) => { this.messagesEnd = el; }}>
+          </div>
+        </div>
         <ChatBar user = {this.state.currentUser.name} addMessage={this.addMessage} updateUsername={this.updateUsername}/>
       </div>
     );
