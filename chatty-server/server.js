@@ -28,17 +28,24 @@ const createNotification = (notification) => {
   return (JSON.stringify(notification));
 }
 
+const sendNumberUsers = (data) => {
+  return(JSON.stringify(data))
+}
+
 wss.broadcast = function broadcast(data) {
   wss.clients.forEach(function each(client) {
       client.send(data);
   });
 };
 
+
 // Set up a callback that will run when a client connects to the server
 // When a client connects they are assigned a socket, represented by
 // the ws parameter in the callback.
 wss.on('connection', (ws) => {
   console.log('Client connected :', wss.clients.size);
+  const numberUsers = {type: 'numberUsers', 'numberUsers': wss.clients.size};
+  wss.broadcast(sendNumberUsers(numberUsers));
   ws.on('message', function incoming(data){
     const message = JSON.parse(data);
     switch(message.type) {
@@ -48,9 +55,15 @@ wss.on('connection', (ws) => {
       case 'postNotification':
         wss.broadcast(createNotification(message));
         break;
+      default :
+       
     }
     
   });
   // Set up a callback for when a client closes the socket. This usually means they closed their browser.
-  ws.on('close', () => console.log('Client disconnected'));
+  ws.on('close', () => {
+    console.log('Client disconnected')
+    const numberUsers = {type: 'numberUsers', 'numberUsers': wss.clients.size};
+    wss.broadcast(sendNumberUsers(numberUsers));
+  });
 });

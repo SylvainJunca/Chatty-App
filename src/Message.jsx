@@ -18,8 +18,8 @@ export default class Message extends Component {
       }
     if (this.type == "incomingNotification") {
         return(
-          <div class="notification">
-            <span class="notification-content">{this.content}</span>
+          <div className="notification">
+            <span className="notification-content">{this.content}</span>
           </div>
         );
     }

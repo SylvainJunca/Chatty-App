@@ -1,13 +1,14 @@
 import React, {Component} from 'react';
 import MessageList from './MessageList.jsx';
 import ChatBar from './ChatBar.jsx';
-
+import NavBar from './NavBar.jsx';
 
 class App extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
+      users: 0,
       currentUser: {name: "Bob"}, // optional. if currentUser is not defined, it means the user is Anonymous
       messages: []
     };
@@ -21,8 +22,13 @@ class App extends Component {
     this.socket.onmessage = (event) => {
       console.log("Received from websocket :", event.data);
       const mess = JSON.parse(event.data);
+      if (mess.type === 'numberUsers') {
+        console.log(mess.numberUsers);
+        this.setState({users : mess.numberUsers});
+      } else {
       const messages = this.state.messages.concat(mess);
       this.setState({messages: messages}); 
+      };
       //console.log(`${mess.username} says ${mess.content}`);
     };
     // setTimeout(() => {
@@ -54,7 +60,7 @@ class App extends Component {
   render() {
     return (
       <div>
-        <NavBar users{this.state.users} />
+        <NavBar numberUsers = {this.state.users} />
         <MessageList messages = {this.state.messages}/>
         <ChatBar user = {this.state.currentUser} addMessage={this.addMessage} updateUsername={this.updateUsername}/>
       </div>
