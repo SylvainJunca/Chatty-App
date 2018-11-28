@@ -11,11 +11,16 @@ export default class ChatBar extends Component {
       e.target.value = '';
     }
   }
+  handleInputName = (e)  => {
+    if(e.keyCode == 13){ 
+      this.props.updateUsername(e.target.value);
+    }
+  }
 
   render (){ 
     return(
       <footer className="chatbar">
-        <input className="chatbar-username" defaultValue={this.props.user ? this.props.user.name : "Your name (Optional)"} />
+        <input onKeyUp={this.handleInputName} className="chatbar-username" defaultValue={this.props.user ? this.props.user.name : "Your name (Optional)"} />
         <input onKeyUp={this.handleInputMessage} className="chatbar-message" placeholder="Type a message and hit ENTER" />
     </footer>)
 
