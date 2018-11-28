@@ -9,7 +9,7 @@ class App extends Component {
     super(props);
     this.state = {
       users: 0,
-      currentUser: {name: "Bob"}, // optional. if currentUser is not defined, it means the user is Anonymous
+      currentUser: {name: "Anonymous", color : '#000000'}, // optional. if currentUser is not defined, it means the user is Anonymous
       messages: []
     };
     this.socket = new WebSocket("ws://localhost:3002");
@@ -25,6 +25,8 @@ class App extends Component {
       if (mess.type === 'numberUsers') {
         console.log(mess.numberUsers);
         this.setState({users : mess.numberUsers});
+      } if (mess.type == 'color') {
+        this.setState({currentUser: {color : mess.color}})
       } else {
       const messages = this.state.messages.concat(mess);
       this.setState({messages: messages}); 
@@ -50,7 +52,7 @@ class App extends Component {
 
   addMessage = (content) => {
    
-    const message = {type: 'postMessage', username: this.state.currentUser.name, content: content};
+    const message = {type: 'postMessage', currentUser: this.state.currentUser, content: content};
     //const messages = this.state.messages.concat(message);
     //this.setState({messages: messages}); 
     //console.log('adding message', message)
@@ -62,7 +64,7 @@ class App extends Component {
       <div>
         <NavBar numberUsers = {this.state.users} />
         <MessageList messages = {this.state.messages}/>
-        <ChatBar user = {this.state.currentUser} addMessage={this.addMessage} updateUsername={this.updateUsername}/>
+        <ChatBar user = {this.state.currentUser.name} addMessage={this.addMessage} updateUsername={this.updateUsername}/>
       </div>
     );
   }
