@@ -19,11 +19,11 @@ class App extends Component {
       console.log("connected to " + e.currentTarget.url);
     };
     this.socket.onmessage = (event) => {
-      console.log("Received from websocket :", event.data);
+      //console.log("Received from websocket :", event.data);
       const mess = JSON.parse(event.data);
       const messages = this.state.messages.concat(mess);
       this.setState({messages: messages}); 
-      console.log(`${mess.username} says ${mess.content}`);
+      //console.log(`${mess.username} says ${mess.content}`);
     };
     // setTimeout(() => {
     //   console.log("Simulating incoming message");
@@ -41,7 +41,7 @@ class App extends Component {
     const message = {username: this.state.currentUser.name, content: content};
     //const messages = this.state.messages.concat(message);
     //this.setState({messages: messages}); 
-    console.log('adding message', message)
+    //console.log('adding message', message)
     this.socket.send(JSON.stringify(message));
   }
 
