@@ -9,7 +9,7 @@ class App extends Component {
     super(props);
     this.state = {
       users: 0,
-      currentUser: {name: "Anonymous", color: '#000000'}, // optional. if currentUser is not defined, it means the user is Anonymous
+      currentUser: {name: 'Anonymous', color: '#000000'}, // optional. if currentUser is not defined, it means the user is Anonymous
       messages: []
     };
     this.socket = new WebSocket("ws://localhost:3002");
@@ -24,11 +24,10 @@ class App extends Component {
       const mess = JSON.parse(event.data);
 
       if (mess.type === 'numberUsers') {
-        console.log(mess.numberUsers);
         this.setState({users : mess.numberUsers});
       } else if (mess.type === 'color') {
-        console.log('color assigned', mess.color);
-        this.setState({currentUser: {color : mess.color}})
+        // console.log('color assigned', mess.color);
+        this.setState({currentUser: {...this.state.currentUser, color : mess.color}})
       } else {
       const messages = this.state.messages.concat(mess);
       this.setState({messages: messages}); 
@@ -48,11 +47,10 @@ class App extends Component {
   updateUsername = (username) => {
     const notification = {type: 'postNotification', content : `${this.state.currentUser.name} changed their name to ${username}`}
     this.socket.send(JSON.stringify(notification));
-    this.setState({currentUser: {name : username}})
+    this.setState({currentUser: {...this.state.currentUser, name : username}})
   }
 
   addMessage = (content) => {
-   
     const message = {type: 'postMessage', name: this.state.currentUser.name, color: this.state.currentUser.color, content: content};
     //const messages = this.state.messages.concat(message);
     //this.setState({messages: messages}); 

@@ -46,7 +46,7 @@ wss.broadcast = function broadcast(data) {
 // When a client connects they are assigned a socket, represented by
 // the ws parameter in the callback.
 wss.on('connection', (ws) => {
-  console.log('Client connected :', wss.clients.size);
+  //console.log('Client connected :', wss.clients.size);
 
   //sends the number of clients connected at the connection
   const numberUsers = {type: 'numberUsers', 'numberUsers': wss.clients.size};
@@ -54,6 +54,7 @@ wss.on('connection', (ws) => {
   
   //assigns a color from the array of colors
   const colorAssigned = {type: 'color', 'color' : colors.shift()}
+  colors.push(colorAssigned.color);
   ws.send(JSON.stringify(colorAssigned));
 
 
@@ -76,6 +77,5 @@ wss.on('connection', (ws) => {
     console.log('Client disconnected')
     const numberUsers = {type: 'numberUsers', 'numberUsers': wss.clients.size};
     wss.broadcast(sendNumberUsers(numberUsers))
-    colors.push(colorAssigned.color);
   });
 });

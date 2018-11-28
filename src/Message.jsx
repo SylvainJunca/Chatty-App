@@ -9,11 +9,10 @@ export default class Message extends Component {
     this.content = content;
   }
   render (){ 
-    console.log(this.type);
     if (this.type == "incomingMessage") {
         return(
           <div className="message">
-            <span className="message-username" color={this.color}>{this.username}</span>
+            <span className="message-username" style={{color : this.color}}>{this.username}</span>
             <span className="message-content">{this.content}</span>
           </div>
         );
