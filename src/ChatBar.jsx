@@ -20,7 +20,7 @@ export default class ChatBar extends Component {
   render (){ 
     return(
       <footer className="chatbar">
-        <input onKeyUp={this.handleInputName} className="chatbar-username" defaultValue={this.props.user ? this.props.user.name : "Your name (Optional)"} />
+        <input onKeyUp={this.handleInputName} className="chatbar-username" defaultValue={this.props.user ? this.props.user : "Your name (Optional)"} />
         <input onKeyUp={this.handleInputMessage} className="chatbar-message" placeholder="Type a message and hit ENTER" />
     </footer>)
 

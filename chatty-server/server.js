@@ -53,7 +53,9 @@ wss.on('connection', (ws) => {
   wss.broadcast(sendNumberUsers(numberUsers));
   
   //assigns a color from the array of colors
-  const colorAssigned = {type: 'color', 'color' : color.pop()}
+  const colorAssigned = {type: 'color', 'color' : colors.shift()}
+  ws.send(JSON.stringify(colorAssigned));
+
 
   ws.on('message', function incoming(data){
     const message = JSON.parse(data);
@@ -74,6 +76,6 @@ wss.on('connection', (ws) => {
     console.log('Client disconnected')
     const numberUsers = {type: 'numberUsers', 'numberUsers': wss.clients.size};
     wss.broadcast(sendNumberUsers(numberUsers))
-    color.push(colorAssigned.color);
+    colors.push(colorAssigned.color);
   });
 });

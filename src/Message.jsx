@@ -9,6 +9,7 @@ export default class Message extends Component {
     this.content = content;
   }
   render (){ 
+    console.log(this.type);
     if (this.type == "incomingMessage") {
         return(
           <div className="message">
