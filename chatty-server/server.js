@@ -37,9 +37,9 @@ const sendNumberUsers = (data) => {
   return (JSON.stringify(data))
 }
 
-const logout = (username) => {
+const log = (username, logMessage) => {
   const notif = {
-    content: `${username} has left the channel`
+    content: `${username} ${logMessage}`
   }
   return createNotification(notif);
 }
@@ -47,6 +47,14 @@ const logout = (username) => {
 wss.broadcast = function broadcast(data) {
   wss.clients.forEach(function each(client) {
     if (client.readyState === WebSocket.OPEN) {
+      client.send(data);
+    }
+  });
+};
+
+wss.broadOthers = function broadcast(data, ws) {
+  wss.clients.forEach(function each(client) {
+    if (client !== ws && client.readyState === WebSocket.OPEN) {
       client.send(data);
     }
   });
@@ -60,14 +68,17 @@ wss.broadcast = function broadcast(data) {
 wss.on('connection', (ws) => {
   //console.log('Client connected :', wss.clients.size);
 
-  //sends the number of clients connected at the connection
+  // Sends the number of clients connected when someone
+  // connects to the chatty app
   const numberUsers = {
     type: 'numberUsers',
     'numberUsers': wss.clients.size
   };
   wss.broadcast(sendNumberUsers(numberUsers));
   let clientName = 'Someone';
-  //assigns a color from the array of colors
+
+  wss.broadOthers(log(clientName, 'joins the channel'), ws);
+  // Assigns a color from the array of colors
   const colorAssigned = {
     type: 'color',
     'color': colors.shift()
@@ -102,6 +113,6 @@ wss.on('connection', (ws) => {
       'numberUsers': wss.clients.size
     };
     wss.broadcast(sendNumberUsers(numberUsers))
-    wss.broadcast(logout(clientName))
+    wss.broadOthers(log(clientName, 'has left the channel'), ws)
   });
 });
