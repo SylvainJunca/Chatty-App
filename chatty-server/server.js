@@ -24,6 +24,10 @@ const wss = new SocketServer({
 
 const colors = ['#AA3C39', '#2813A8', '#009B00', '#B70080'];
 
+// This function is triggered when the user enter the command '/giphy'
+// It gets a random gif based on the keywords entered by the user
+// and send it to the chat 
+
 const giphyBot = async (keyWord) => {
   const response = await fetch(`https://api.giphy.com/v1/gifs/random?api_key=${ giphyKey.GIPHY_KEY }&tag=${ keyWord[1] }&rating=G`)
   const json = await response.json();
@@ -34,41 +38,16 @@ const giphyBot = async (keyWord) => {
       __html: `<img src='${gif}' />`
     });
   } else {
+    // If the server does not respond, we send back this error message to the chat
     return ({
       __html: `<span> Oh no, I tried to use Giphy to send a gif of ${keyWord[1]} but the server seem to not respond :'(</span>`
     });
-    // const notification = {
-    //   content: 'Oups Giphy Bot is sleeping at the moment, please try again later'
-    // };
-    // returncreateNotification(notification);
   }
 
 }
 
-
-// return {
-//   __html: `First &middot; Second`
-// }
-// return Promise.resolve({
-//   __html: `<img src='https://media1.giphy.com/media/DU0aEm71P3Te8/giphy-downsized.gif' />`
-// });
-// console.log(`https://api.giphy.com/v1/gifs/random?api_key=${ giphyKey.GIPHY_KEY }&tag=${ keyWord[1] }&rating=G`);
-// return fetch(`https://api.giphy.com/v1/gifs/random?api_key=${ giphyKey.GIPHY_KEY }&tag=${ keyWord[1] }&rating=G`)
-//   .then(function (response) {
-//     return response.json();
-//   })
-//   .then(function (giphy) {
-//     gif = giphy.data.images.downsized.url;
-//     return {
-//       __html: `First &middot; Second`
-//     }
-//     // return ({
-//     //   __html: `<img src='${gif}' />`
-//     // });
-//   })
-//   .catch((error) => console.error(error))
-
-
+// This function creates a message before sending it back to the client 
+// It differenciates if it is a regular message or a command to use the gif bot
 const createMessage = async function (message) {
   message.type = 'incomingMessage';
   message.id = uuidv1();
@@ -85,16 +64,21 @@ const createMessage = async function (message) {
 
 }
 
+// This function handles the notifications sent back to the clients 
+
 const createNotification = (notification) => {
   notification.type = 'incomingNotification';
   notification.id = uuidv1();
   return (JSON.stringify(notification));
 }
 
+// This function sends the number of users connected to the client
+// It is triggered each time someone enters or leave the chat
 const sendNumberUsers = (data) => {
   return (JSON.stringify(data))
 }
-
+// this function creates the notifications sent to everybody each 
+// time someone enters or leave the chat
 const log = (username, logMessage) => {
   const notif = {
     content: `${username} ${logMessage}`
@@ -102,6 +86,8 @@ const log = (username, logMessage) => {
   return createNotification(notif);
 }
 
+// When we want to send a message or notification to everybody, we use 
+// the following function
 wss.broadcast = function broadcast(data) {
   wss.clients.forEach(function each(client) {
     if (client.readyState === WebSocket.OPEN) {
@@ -110,6 +96,8 @@ wss.broadcast = function broadcast(data) {
   });
 };
 
+// When we want to send a message or notification to everybody except the
+// actual client, we use the following function
 wss.broadOthers = function broadcast(data, ws) {
   wss.clients.forEach(function each(client) {
     if (client !== ws && client.readyState === WebSocket.OPEN) {
@@ -136,7 +124,9 @@ wss.on('connection', (ws) => {
   let clientName = 'Someone';
 
   wss.broadOthers(log(clientName, 'joins the channel'), ws);
-  // Assigns a color from the array of colors
+
+  // Assigns a color from the array of colors to the users
+  // when they login for the first time 
   const colorAssigned = {
     type: 'color',
     'color': colors.shift()
@@ -144,10 +134,12 @@ wss.on('connection', (ws) => {
   colors.push(colorAssigned.color);
   ws.send(JSON.stringify(colorAssigned));
 
-
+  // This establishes the connection with the client 
   ws.on('message', async function incoming(data) {
     const message = JSON.parse(data);
 
+    // Depending on the type of message received, we are going to treat 
+    // the data differently by calling 2 distinct functions
     switch (message.type) {
       case 'postMessage':
         const x = await createMessage(message)
@@ -171,6 +163,8 @@ wss.on('connection', (ws) => {
       type: 'numberUsers',
       'numberUsers': wss.clients.size
     };
+    // When someone leaves the chat, we reactualize the number of users connected
+    // and send a notification to inform the other users the person left
     wss.broadcast(sendNumberUsers(numberUsers))
     wss.broadOthers(log(clientName, 'has left the channel'), ws)
   });
