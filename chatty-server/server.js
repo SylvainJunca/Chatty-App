@@ -3,21 +3,23 @@
 const express = require('express');
 const SocketServer = require('ws').Server;
 const WebSocket = require('ws');
-const uuidv1 = require('uuid/v1')
+const uuidv1 = require('uuid/v1');
 
 // Set the port to 3001
 const PORT = 3002;
 
 // Create a new express server
 const server = express()
-   // Make the express server serve static assets (html, javascript, css) from the /public folder
+  // Make the express server serve static assets (html, javascript, css) from the /public folder
   .use(express.static('public'))
   .listen(PORT, '0.0.0.0', 'localhost', () => console.log(`Listening on ${ PORT }`));
 
 // Create the WebSockets server
-const wss = new SocketServer({ server });
+const wss = new SocketServer({
+  server
+});
 
-const colors = [ '#AA3C39', '#2813A8', '#009B00', '#B70080'];
+const colors = ['#AA3C39', '#2813A8', '#009B00', '#B70080'];
 
 const createMessage = (message) => {
   message.type = 'incomingMessage';
@@ -32,11 +34,13 @@ const createNotification = (notification) => {
 }
 
 const sendNumberUsers = (data) => {
-  return(JSON.stringify(data))
+  return (JSON.stringify(data))
 }
 
 const logout = (username) => {
-  const notif = {content: `${username} has left the channel`}
+  const notif = {
+    content: `${username} has left the channel`
+  }
   return createNotification(notif);
 }
 
@@ -57,20 +61,26 @@ wss.on('connection', (ws) => {
   //console.log('Client connected :', wss.clients.size);
 
   //sends the number of clients connected at the connection
-  const numberUsers = {type: 'numberUsers', 'numberUsers': wss.clients.size};
+  const numberUsers = {
+    type: 'numberUsers',
+    'numberUsers': wss.clients.size
+  };
   wss.broadcast(sendNumberUsers(numberUsers));
   let clientName = 'Someone';
   //assigns a color from the array of colors
-  const colorAssigned = {type: 'color', 'color' : colors.shift()}
+  const colorAssigned = {
+    type: 'color',
+    'color': colors.shift()
+  }
   colors.push(colorAssigned.color);
   ws.send(JSON.stringify(colorAssigned));
 
 
-  ws.on('message', function incoming(data){
+  ws.on('message', function incoming(data) {
     const message = JSON.parse(data);
-    
-    switch(message.type) {
-      case 'postMessage': 
+
+    switch (message.type) {
+      case 'postMessage':
         wss.broadcast(createMessage(message));
         break;
       case 'postNotification':
@@ -78,16 +88,19 @@ wss.on('connection', (ws) => {
         clientName = message.name;
         console.log(message)
         break;
-      default :
-       
+      default:
+
     }
-    
+
   });
   // Set up a callback for when a client closes the socket. This usually means they closed their browser.
   ws.on('close', (event) => {
     console.log(event);
     console.log('Client disconnected')
-    const numberUsers = {type: 'numberUsers', 'numberUsers': wss.clients.size};
+    const numberUsers = {
+      type: 'numberUsers',
+      'numberUsers': wss.clients.size
+    };
     wss.broadcast(sendNumberUsers(numberUsers))
     wss.broadcast(logout(clientName))
   });
