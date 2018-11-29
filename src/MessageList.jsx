@@ -11,6 +11,7 @@ export default class MessageList extends Component {
 					username={message.name}
 					color={message.color}
 					content={message.content}
+					gif={message.gif}
 				/>
 			);
 		});

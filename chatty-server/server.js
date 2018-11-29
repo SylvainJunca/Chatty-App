@@ -24,28 +24,65 @@ const wss = new SocketServer({
 
 const colors = ['#AA3C39', '#2813A8', '#009B00', '#B70080'];
 
-const giphyBot = (keyWord) => {
-  console.log(`https://api.giphy.com/v1/gifs/random?api_key=${ giphyKey.GIPHY_KEY }&tag=${ keyWord[1] }&rating=G`);
-  fetch(`https://api.giphy.com/v1/gifs/random?api_key=${ giphyKey.GIPHY_KEY }&tag=${ keyWord[1] }&rating=G`)
-    .then(function (response) {
-      return response.json();
-    })
-    .then(function (data) {
-      console.log(data)
-    })
-    .catch((error) => console.error(error))
+const giphyBot = async (keyWord) => {
+  const response = await fetch(`https://api.giphy.com/v1/gifs/random?api_key=${ giphyKey.GIPHY_KEY }&tag=${ keyWord[1] }&rating=G`)
+  const json = await response.json();
+  if (json.data) {
+    const gif = json.data.images.downsized.url;
+    console.log(gif);
+    return ({
+      __html: `<img src='${gif}' />`
+    });
+  } else {
+    return ({
+      __html: `<span> Oh no, I tried to use Giphy to send a gif of ${keyWord[1]} but the server seem to not respond :'(</span>`
+    });
+    // const notification = {
+    //   content: 'Oups Giphy Bot is sleeping at the moment, please try again later'
+    // };
+    // returncreateNotification(notification);
+  }
+
 }
 
-const createMessage = (message) => {
+
+// return {
+//   __html: `First &middot; Second`
+// }
+// return Promise.resolve({
+//   __html: `<img src='https://media1.giphy.com/media/DU0aEm71P3Te8/giphy-downsized.gif' />`
+// });
+// console.log(`https://api.giphy.com/v1/gifs/random?api_key=${ giphyKey.GIPHY_KEY }&tag=${ keyWord[1] }&rating=G`);
+// return fetch(`https://api.giphy.com/v1/gifs/random?api_key=${ giphyKey.GIPHY_KEY }&tag=${ keyWord[1] }&rating=G`)
+//   .then(function (response) {
+//     return response.json();
+//   })
+//   .then(function (giphy) {
+//     gif = giphy.data.images.downsized.url;
+//     return {
+//       __html: `First &middot; Second`
+//     }
+//     // return ({
+//     //   __html: `<img src='${gif}' />`
+//     // });
+//   })
+//   .catch((error) => console.error(error))
+
+
+const createMessage = async function (message) {
+  message.type = 'incomingMessage';
+  message.id = uuidv1();
   // Regex to check if the user enters the command to trigger the bot giphy
   const match = message.content.match(/^\/giphy (\w.+)$/);
   if (match) {
-    message.content = 'GIF request detected';
-    giphyBot(match);
+    console.log('message');
+
+    message.gif = await giphyBot(match)
+    return (JSON.stringify(message));
+  } else {
+    return (JSON.stringify(message));
   }
-  message.type = 'incomingMessage';
-  message.id = uuidv1();
-  return (JSON.stringify(message));
+
 }
 
 const createNotification = (notification) => {
@@ -108,12 +145,13 @@ wss.on('connection', (ws) => {
   ws.send(JSON.stringify(colorAssigned));
 
 
-  ws.on('message', function incoming(data) {
+  ws.on('message', async function incoming(data) {
     const message = JSON.parse(data);
 
     switch (message.type) {
       case 'postMessage':
-        wss.broadcast(createMessage(message));
+        const x = await createMessage(message)
+        wss.broadcast(x);
         break;
       case 'postNotification':
         wss.broadcast(createNotification(message));
