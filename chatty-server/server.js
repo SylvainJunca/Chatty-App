@@ -5,7 +5,6 @@ const SocketServer = require('ws').Server;
 const WebSocket = require('ws');
 const uuidv1 = require('uuid/v1');
 const fetch = require("node-fetch");
-
 const giphyKey = require('./secret');
 
 // Set the port to 3001
@@ -33,14 +32,13 @@ const giphyBot = async (keyWord) => {
   const json = await response.json();
   if (json.data) {
     const gif = json.data.images.downsized.url;
-    console.log(gif);
     return ({
       __html: `<img src='${gif}' />`
     });
   } else {
     // If the server does not respond, we send back this error message to the chat
     return ({
-      __html: `<span> Oh no, I tried to use Giphy to send a gif of ${keyWord[1]} but the server seem to not respond :'(</span>`
+      __html: `<span> Oh no, I tried to use Giphy to send a gif of ${keyWord[1]} but the server seems to not respond :'(</span>`
     });
   }
 
@@ -54,8 +52,6 @@ const createMessage = async function (message) {
   // Regex to check if the user enters the command to trigger the bot giphy
   const match = message.content.match(/^\/giphy (\w.+)$/);
   if (match) {
-    console.log('message');
-
     message.gif = await giphyBot(match)
     return (JSON.stringify(message));
   } else {
@@ -106,13 +102,10 @@ wss.broadOthers = function broadcast(data, ws) {
   });
 };
 
-
-
 // Set up a callback that will run when a client connects to the server
 // When a client connects they are assigned a socket, represented by
 // the ws parameter in the callback.
 wss.on('connection', (ws) => {
-  //console.log('Client connected :', wss.clients.size);
 
   // Sends the number of clients connected when someone
   // connects to the chatty app
@@ -148,7 +141,7 @@ wss.on('connection', (ws) => {
       case 'postNotification':
         wss.broadcast(createNotification(message));
         clientName = message.name;
-        //console.log(message)
+
         break;
       default:
 
@@ -157,7 +150,7 @@ wss.on('connection', (ws) => {
   });
   // Set up a callback for when a client closes the socket. This usually means they closed their browser.
   ws.on('close', (event) => {
-    //console.log(event);
+
     console.log('Client disconnected')
     const numberUsers = {
       type: 'numberUsers',
