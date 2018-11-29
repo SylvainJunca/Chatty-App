@@ -35,6 +35,11 @@ const sendNumberUsers = (data) => {
   return(JSON.stringify(data))
 }
 
+const logout = (username) => {
+  const notif = {content: `${username} has left the channel`}
+  return createNotification(notif);
+}
+
 wss.broadcast = function broadcast(data) {
   wss.clients.forEach(function each(client) {
     if (client.readyState === WebSocket.OPEN) {
@@ -54,7 +59,7 @@ wss.on('connection', (ws) => {
   //sends the number of clients connected at the connection
   const numberUsers = {type: 'numberUsers', 'numberUsers': wss.clients.size};
   wss.broadcast(sendNumberUsers(numberUsers));
-  
+  let clientName = 'Someone';
   //assigns a color from the array of colors
   const colorAssigned = {type: 'color', 'color' : colors.shift()}
   colors.push(colorAssigned.color);
@@ -63,12 +68,15 @@ wss.on('connection', (ws) => {
 
   ws.on('message', function incoming(data){
     const message = JSON.parse(data);
+    
     switch(message.type) {
       case 'postMessage': 
         wss.broadcast(createMessage(message));
         break;
       case 'postNotification':
         wss.broadcast(createNotification(message));
+        clientName = message.name;
+        console.log(message)
         break;
       default :
        
@@ -76,9 +84,11 @@ wss.on('connection', (ws) => {
     
   });
   // Set up a callback for when a client closes the socket. This usually means they closed their browser.
-  ws.on('close', () => {
+  ws.on('close', (event) => {
+    console.log(event);
     console.log('Client disconnected')
     const numberUsers = {type: 'numberUsers', 'numberUsers': wss.clients.size};
     wss.broadcast(sendNumberUsers(numberUsers))
+    wss.broadcast(logout(clientName))
   });
 });

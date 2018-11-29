@@ -8,6 +8,7 @@ export default class Message extends Component {
     this.color = color;
     this.content = content;
   }
+
   render (){ 
     if (this.type == "incomingMessage") {
         return(
