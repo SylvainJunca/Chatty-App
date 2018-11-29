@@ -4,6 +4,9 @@ const express = require('express');
 const SocketServer = require('ws').Server;
 const WebSocket = require('ws');
 const uuidv1 = require('uuid/v1');
+const fetch = require("node-fetch");
+
+const giphyKey = require('./secret');
 
 // Set the port to 3001
 const PORT = 3002;
@@ -21,10 +24,24 @@ const wss = new SocketServer({
 
 const colors = ['#AA3C39', '#2813A8', '#009B00', '#B70080'];
 
+const giphyBot = (keyWord) => {
+  console.log(`https://api.giphy.com/v1/gifs/random?api_key=${ giphyKey.GIPHY_KEY }&tag=${ keyWord[1] }&rating=G`);
+  fetch(`https://api.giphy.com/v1/gifs/random?api_key=${ giphyKey.GIPHY_KEY }&tag=${ keyWord[1] }&rating=G`)
+    .then(function (response) {
+      return response.json();
+    })
+    .then(function (data) {
+      console.log(data)
+    })
+    .catch((error) => console.error(error))
+}
+
 const createMessage = (message) => {
-  const match = message.content.match(/^\/giphy (\w)+/);
+  // Regex to check if the user enters the command to trigger the bot giphy
+  const match = message.content.match(/^\/giphy (\w.+)$/);
   if (match) {
     message.content = 'GIF request detected';
+    giphyBot(match);
   }
   message.type = 'incomingMessage';
   message.id = uuidv1();
@@ -101,7 +118,7 @@ wss.on('connection', (ws) => {
       case 'postNotification':
         wss.broadcast(createNotification(message));
         clientName = message.name;
-        console.log(message)
+        //console.log(message)
         break;
       default:
 
@@ -110,7 +127,7 @@ wss.on('connection', (ws) => {
   });
   // Set up a callback for when a client closes the socket. This usually means they closed their browser.
   ws.on('close', (event) => {
-    console.log(event);
+    //console.log(event);
     console.log('Client disconnected')
     const numberUsers = {
       type: 'numberUsers',
