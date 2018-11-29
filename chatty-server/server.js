@@ -22,6 +22,10 @@ const wss = new SocketServer({
 const colors = ['#AA3C39', '#2813A8', '#009B00', '#B70080'];
 
 const createMessage = (message) => {
+  const match = message.content.match(/^\/giphy (\w)+/);
+  if (match) {
+    message.content = 'GIF request detected';
+  }
   message.type = 'incomingMessage';
   message.id = uuidv1();
   return (JSON.stringify(message));
