@@ -8,7 +8,7 @@ const Message = ({ type, username, color, content, gif, scrollToBottom }) => {
 					<span className="message-username" style={{ color: color }}>
 						{username}
 					</span>
-					<img className="message-content" src={gif} onLoad={scrollToBottom} />
+					<img className="message-content" style={{ 'border-color': color }} src={gif} onLoad={scrollToBottom} />
 				</div>
 			);
 		}
@@ -17,7 +17,9 @@ const Message = ({ type, username, color, content, gif, scrollToBottom }) => {
 				<span className="message-username" style={{ color: color }}>
 					{username}
 				</span>
-				<span className="message-content">{content}</span>
+				<span className="message-content" style={{ 'border-color': color }}>
+					{content}
+				</span>
 			</div>
 		);
 	}

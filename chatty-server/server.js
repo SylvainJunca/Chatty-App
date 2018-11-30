@@ -109,6 +109,11 @@ wss.on('connection', (ws) => {
   let clientName = 'Someone';
 
   wss.broadOthers(log(clientName, 'joins the channel'), ws);
+  ws.send(createNotification({
+    content: `Welcome to Chatty App, you should change your username to let people know who you are.
+    This app comes with a nice bot named Giphy Bot that send a random GIF based on the keyword you enter.
+    For example, to send a cat GIF just type: '/giphy cat`
+  }));
 
   // Assigns a color from the array of colors to the users
   // when they login for the first time 
