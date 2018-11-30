@@ -22,7 +22,6 @@ class App extends Component {
 			console.log('connected to ' + e.currentTarget.url);
 		};
 		this.socket.onmessage = (event) => {
-			console.log('Received from websocket :', event.data);
 			const message = JSON.parse(event.data);
 
 			if (message.type === 'numberUsers') {
@@ -55,9 +54,6 @@ class App extends Component {
 		this.scrollToBottom();
 	}
 	scrollToBottom = () => {
-		// const chat = document.querySelector('.messages');
-		// console.log(chat.scrollTop, chat.scrollHeight);
-		// chat.scrollTop = chat.scrollHeight;
 		this.messageEnd.scrollIntoView({
 			behavior: 'smooth'
 		});

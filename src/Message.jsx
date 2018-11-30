@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 const Message = ({ type, username, color, content, gif, scrollToBottom }) => {
 	if (type == 'incomingMessage') {
