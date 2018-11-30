@@ -7,6 +7,7 @@ body {
   font-family: 'Open Sans', sans-serif;
   font-size: 14px;
   margin: 70px 0;
+  overflow: hidden;
 }
 
 .chatbar {
@@ -53,15 +54,23 @@ body {
   overflow: hidden;
   margin: 5px;
   padding: 0 10px;
+  word-break: break-all;
 }
 
+
 .message-content {
-  flex: 8;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+
+  &:not(img) {
+    width: 100%;
+  }
 }
 
 .message-username {
-  flex: 2;
+  flex-shrink: 0;
   font-weight: 700;
+  width: 150px;
 }
 
 .navbar {
