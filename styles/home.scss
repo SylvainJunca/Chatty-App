@@ -7,7 +7,7 @@ body {
   font-family: 'Open Sans', sans-serif;
   font-size: 14px;
   margin: 70px 0;
-  overflow: hidden;
+  // overflow: hidden;
 }
 
 .chatbar {
@@ -51,7 +51,7 @@ body {
 
 .message-content,
 .message-username {
-  overflow: hidden;
+  // overflow: hidden;
   margin: 5px;
   padding: 0 10px;
   word-break: break-all;
@@ -62,9 +62,9 @@ body {
   border: 1px solid #ddd;
   border-radius: 5px;
 
-  &:not(img) {
-    width: 100%;
-  }
+  // &:not(img) {
+  //   width: 100%;
+  // }
 }
 
 .message-username {

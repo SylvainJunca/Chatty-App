@@ -48,18 +48,19 @@ class App extends Component {
 					messages: messages
 				});
 			}
+			this.scrollToBottom();
 		};
 	}
 	componentDidUpdate() {
 		this.scrollToBottom();
 	}
 	scrollToBottom = () => {
-		const chat = document.querySelector('.messages');
-		console.log(chat.scrollTop, chat.scrollHeight);
-		chat.scrollTop = chat.scrollHeight;
-		// this.messagesEnd.scrollIntoView({
-		// 	behavior: 'smooth'
-		// });
+		// const chat = document.querySelector('.messages');
+		// console.log(chat.scrollTop, chat.scrollHeight);
+		// chat.scrollTop = chat.scrollHeight;
+		this.messageEnd.scrollIntoView({
+			behavior: 'smooth'
+		});
 	};
 
 	updateUsername = (username) => {
@@ -92,7 +93,14 @@ class App extends Component {
 		return (
 			<div>
 				<NavBar numberUsers={this.state.users} />
-				<MessageList messages={this.state.messages} scrollToBottom={this.scrollToBottom} />
+				<div>
+					<MessageList messages={this.state.messages} scrollToBottom={this.scrollToBottom} />
+					<div
+						ref={(el) => {
+							this.messageEnd = el;
+						}}
+					/>
+				</div>
 				<ChatBar
 					user={this.state.currentUser.name}
 					addMessage={this.addMessage}
