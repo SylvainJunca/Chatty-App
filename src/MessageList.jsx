@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+//import React, { Component } from 'react';
 import Message from './Message.jsx';
 
 const MessageList = ({ messages, scrollToBottom }) => (
@@ -18,7 +18,3 @@ const MessageList = ({ messages, scrollToBottom }) => (
 );
 
 export default MessageList;
-
-{
-	/* <main className="messages" style={{ height: 'calc(100vh - 62px - 70px)', 'overflow-y': 'auto' }}></main> */
-}

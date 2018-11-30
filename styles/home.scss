@@ -41,6 +41,7 @@ body {
 
 .message {
   display: flex;
+  flex-wrap: wrap;
   padding: 5px;
 }
 
@@ -61,10 +62,11 @@ body {
 .message-content {
   border: 1px solid #ddd;
   border-radius: 5px;
+}
 
-  // &:not(img) {
-  //   width: 100%;
-  // }
+img.message-content {
+  max-width: 100%;
+  align-self: flex-start;
 }
 
 .message-username {
