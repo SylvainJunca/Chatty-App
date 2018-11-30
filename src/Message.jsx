@@ -24,7 +24,7 @@ const Message = ({ type, username, color, content, gif, scrollToBottom }) => {
 	if (type == 'incomingNotification') {
 		return (
 			<div className="notification">
-				<span className="message-system">{content}</span>
+				<span>{content}</span>
 			</div>
 		);
 	}

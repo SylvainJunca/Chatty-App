@@ -53,6 +53,8 @@ class App extends Component {
 	componentDidUpdate() {
 		this.scrollToBottom();
 	}
+	// This function is triggered each time a message is posted or
+	// a gif is rendered. it allows the app to auto-scroll to the last post
 	scrollToBottom = () => {
 		this.messageEnd.scrollIntoView({
 			behavior: 'smooth'
@@ -101,7 +103,7 @@ class App extends Component {
 					user={this.state.currentUser.name}
 					addMessage={this.addMessage}
 					updateUsername={this.updateUsername}
-				/>{' '}
+				/>
 			</div>
 		);
 	}
