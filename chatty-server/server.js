@@ -30,18 +30,10 @@ const colors = ['#AA3C39', '#2813A8', '#009B00', '#B70080'];
 const giphyBot = async (keyWord) => {
   const response = await fetch(`https://api.giphy.com/v1/gifs/random?api_key=${ giphyKey.GIPHY_KEY }&tag=${ keyWord[1] }&rating=G`)
   const json = await response.json();
-  if (json.data) {
-    const gif = json.data.images.downsized.url;
-    return ({
-      __html: `<img src='${gif}' />`
-    });
-  } else {
-    // If the server does not respond, we send back this error message to the chat
-    return ({
-      __html: `<span> Oh no, I tried to use Giphy to send a gif of ${keyWord[1]} but the server seems to not respond :'(</span>`
-    });
-  }
 
+  return json.data ?
+    json.data.images.downsized.url :
+    'https://www.interserver.net/tips/wp-content/uploads/2016/10/404error.jpeg';
 }
 
 // This function creates a message before sending it back to the client 

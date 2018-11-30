@@ -1,42 +1,33 @@
 import React, { Component } from 'react';
 
-export default class Message extends Component {
-	constructor({ type, username, color, content, gif }) {
-		super();
-		this.type = type;
-		this.username = username;
-		this.color = color;
-		this.content = content;
-		this.gif = gif;
-	}
-
-	render() {
-		if (this.type == 'incomingMessage') {
-			if (this.gif) {
-				return (
-					<div className="message">
-						<span className="message-username" style={{ color: this.color }}>
-							{this.username}
-						</span>
-						<div className="message-content" dangerouslySetInnerHTML={this.gif} />
-					</div>
-				);
-			}
+const Message = ({ type, username, color, content, gif, scrollToBottom }) => {
+	if (type == 'incomingMessage') {
+		if (gif) {
 			return (
 				<div className="message">
-					<span className="message-username" style={{ color: this.color }}>
-						{this.username}
+					<span className="message-username" style={{ color: color }}>
+						{username}
 					</span>
-					<span className="message-content">{this.content}</span>
+					<img className="message-content" src={gif} onLoad={scrollToBottom} />
 				</div>
 			);
 		}
-		if (this.type == 'incomingNotification') {
-			return (
-				<div className="notification">
-					<span className="notification-content">{this.content}</span>
-				</div>
-			);
-		}
+		return (
+			<div className="message">
+				<span className="message-username" style={{ color: color }}>
+					{username}
+				</span>
+				<span className="message-content">{content}</span>
+			</div>
+		);
 	}
-}
+	if (type == 'incomingNotification') {
+		return (
+			<div className="notification">
+				<span className="notification-content">{content}</span>
+			</div>
+		);
+	}
+};
+
+export default Message;

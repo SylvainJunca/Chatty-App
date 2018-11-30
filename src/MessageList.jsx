@@ -1,20 +1,20 @@
 import React, { Component } from 'react';
 import Message from './Message.jsx';
 
-export default class MessageList extends Component {
-	render() {
-		const listMess = this.props.messages.map((message) => {
-			return (
-				<Message
-					key={message.id}
-					type={message.type}
-					username={message.name}
-					color={message.color}
-					content={message.content}
-					gif={message.gif}
-				/>
-			);
-		});
-		return <main className="messages">{listMess}</main>;
-	}
-}
+const MessageList = ({ messages, scrollToBottom }) => (
+	<main className="messages" style={{ height: 'calc(100vh - 65px - 70px)', 'overflow-y': 'auto' }}>
+		{messages.map((message) => (
+			<Message
+				key={message.id}
+				type={message.type}
+				username={message.name}
+				color={message.color}
+				content={message.content}
+				gif={message.gif}
+				scrollToBottom={scrollToBottom}
+			/>
+		))}
+	</main>
+);
+
+export default MessageList;

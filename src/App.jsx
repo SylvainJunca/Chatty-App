@@ -48,18 +48,18 @@ class App extends Component {
 					messages: messages
 				});
 			}
-
-			// We trigger the function to scroll to bottom
-			this.scrollToBottom();
 		};
 	}
 	componentDidUpdate() {
 		this.scrollToBottom();
 	}
 	scrollToBottom = () => {
-		this.messagesEnd.scrollIntoView({
-			behavior: 'smooth'
-		});
+		const chat = document.querySelector('.messages');
+		console.log(chat.scrollTop, chat.scrollHeight);
+		chat.scrollTop = chat.scrollHeight;
+		// this.messagesEnd.scrollIntoView({
+		// 	behavior: 'smooth'
+		// });
 	};
 
 	updateUsername = (username) => {
@@ -92,19 +92,7 @@ class App extends Component {
 		return (
 			<div>
 				<NavBar numberUsers={this.state.users} />
-				<div>
-					<MessageList messages={this.state.messages} />
-					{/*following is the div that is works with the scrollToBottom*/}
-					<div
-						style={{
-							float: 'bottom',
-							clear: 'both'
-						}}
-						ref={(el) => {
-							this.messagesEnd = el;
-						}}
-					/>
-				</div>
+				<MessageList messages={this.state.messages} scrollToBottom={this.scrollToBottom} />
 				<ChatBar
 					user={this.state.currentUser.name}
 					addMessage={this.addMessage}
