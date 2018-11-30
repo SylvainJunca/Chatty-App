@@ -33,7 +33,7 @@ const giphyBot = async (keyWord) => {
 
   return json.data ?
     json.data.images.downsized.url :
-    'https://www.interserver.net/tips/wp-content/uploads/2016/10/404error.jpeg';
+    './src/docs/GifBot-error.png';
 }
 
 // This function creates a message before sending it back to the client 
