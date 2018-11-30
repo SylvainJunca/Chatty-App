@@ -11,40 +11,46 @@ class App extends Component {
 			currentUser: {
 				name: 'Anonymous',
 				color: '#000000'
-			}, // optional. if currentUser is not defined, it means the user is Anonymous
+			},
 			messages: []
 		};
 		this.socket = new WebSocket('ws://localhost:3002');
 	}
+
 	componentDidMount() {
 		this.socket.onopen = function(e) {
 			console.log('connected to ' + e.currentTarget.url);
 		};
 		this.socket.onmessage = (event) => {
 			console.log('Received from websocket :', event.data);
-			const mess = JSON.parse(event.data);
+			const message = JSON.parse(event.data);
 
-			if (mess.type === 'numberUsers') {
+			if (message.type === 'numberUsers') {
+				// if message received is type of numberUsers
+				// we update the number of user in the state
 				this.setState({
-					users: mess.numberUsers
+					users: message.numberUsers
 				});
-			} else if (mess.type === 'color') {
-				// console.log('color assigned', mess.color);
+			} else if (message.type === 'color') {
+				// if the message received is type of color
+				// we update the color in the CurrentUser object
 				this.setState({
 					currentUser: {
 						...this.state.currentUser,
-						color: mess.color
+						color: message.color
 					}
 				});
 			} else {
-				const messages = this.state.messages.concat(mess);
+				// By default, the message, sohuld it be a message or notification will be sent in
+				// the messages array before being rendered
+				const messages = this.state.messages.concat(message);
 				this.setState({
 					messages: messages
 				});
 			}
 
+			// We trigger the function to scroll to bottom
 			this.scrollToBottom();
-			//console.log(`${mess.username} says ${mess.content}`);
 		};
 	}
 	componentDidUpdate() {
@@ -78,9 +84,7 @@ class App extends Component {
 			color: this.state.currentUser.color,
 			content: content
 		};
-		//const messages = this.state.messages.concat(message);
-		//this.setState({messages: messages});
-		//console.log('adding message', message)
+
 		this.socket.send(JSON.stringify(message));
 	};
 
@@ -90,6 +94,7 @@ class App extends Component {
 				<NavBar numberUsers={this.state.users} />
 				<div>
 					<MessageList messages={this.state.messages} />
+					{/*following is the div that is works with the scrollToBottom*/}
 					<div
 						style={{
 							float: 'bottom',
