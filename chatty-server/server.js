@@ -21,7 +21,7 @@ const wss = new SocketServer({
   server
 });
 
-const colors = ['#9400D3', '#0000FF', '#00FF00', '#FFFF00', '#FF7F00', '#FF0000'];
+const colors = ['#9400D3', '#0000FF', '#3DB000', '#FFDA27', '#FF7F00', '#FF0000'];
 
 // This function is triggered when the user enter the command '/giphy'
 // It gets a random gif based on the keywords entered by the user

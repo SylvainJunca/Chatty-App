@@ -57,19 +57,22 @@ body {
 .message-username {
   // overflow: hidden;
   margin: 5px;
-  padding: 0 10px;
+  padding: 10px;
   word-break: break-all;
 }
 
 
 .message-content {
   border: 1px solid;
-  border-radius: 5px;
+  color: white;
+  font-weight: bold;
+  border-radius: 20px;
 }
 
 img.message-content {
   max-width: 100%;
   align-self: flex-start;
+  padding: 0px;
 }
 
 .message-username {
